@@ -94,6 +94,15 @@ button:hover {
     color: #28a745;
 }
 
+/* Style for the base rate display */
+.base-rate {
+    margin-top: 15px; /* Adjust spacing as needed */
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #6c757d; /* A bit lighter color for the base rate */
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .input-section {
