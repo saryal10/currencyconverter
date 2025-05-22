@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.input-section').appendChild(baseRateParagraph); // Add it to the input section
 
     // Replace with your actual API key from ExchangeRate-API.com
-    const API_KEY = 'YOUR_API_KEY';
+    const API_KEY = '9c3d89c169bab95071672045';
     const API_BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
     let exchangeRates = {}; // To store fetched exchange rates
