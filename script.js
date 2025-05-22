@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const baseRateParagraph = document.getElementById('baseRate');
+    // Corrected: Removed the duplicate declaration of baseRateParagraph
+    const baseRateParagraph = document.getElementById('baseRate'); // This is the correct and only declaration needed
+
     const amountInput = document.getElementById('amount');
     const fromCurrencySelect = document.getElementById('fromCurrency');
     const toCurrencySelect = document.getElementById('toCurrency');
     const convertBtn = document.getElementById('convertBtn');
     const resultParagraph = document.getElementById('result');
-    // Get the pre-existing paragraph element for base rate
-    const baseRateParagraph = document.getElementById('baseRate'); // THIS ASSUMES <p id="baseRate"></p> IS IN YOUR HTML
-
+    
     // IMPORTANT: Replace with your actual API key from ExchangeRate-API.com
     const API_KEY = '9c3d89c169bab95071672045'; // Your key here
     const API_BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch exchange rates for a given base currency
     async function fetchRates(baseCurrency) {
-        console.log(`Fetching rates for base: ${baseCurrency}...`); // Debugging log
+        console.log(`Workspaceing rates for base: ${baseCurrency}...`); // Debugging log
         try {
             const response = await fetch(`${API_BASE_URL}/latest/${baseCurrency}`);
             const data = await response.json();
