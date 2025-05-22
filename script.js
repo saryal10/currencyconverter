@@ -4,24 +4,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const toCurrencySelect = document.getElementById('toCurrency');
     const convertBtn = document.getElementById('convertBtn');
     const resultParagraph = document.getElementById('result');
-    const baseRateParagraph = document.createElement('p'); // Create a new paragraph for the base rate
-    baseRateParagraph.id = 'baseRate';
-    document.querySelector('.input-section').appendChild(baseRateParagraph); // Add it to the input section
+    // Get the pre-existing paragraph element for base rate
+    const baseRateParagraph = document.getElementById('baseRate'); // THIS ASSUMES <p id="baseRate"></p> IS IN YOUR HTML
 
-    // Replace with your actual API key from ExchangeRate-API.com
-    const API_KEY = '9c3d89c169bab95071672045';
+    // IMPORTANT: Replace with your actual API key from ExchangeRate-API.com
+    const API_KEY = '9c3d89c169bab95071672045'; // Your key here
     const API_BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
     let exchangeRates = {}; // To store fetched exchange rates
 
     // Function to populate currency dropdowns
     async function populateCurrencies() {
+        console.log("Populating currencies..."); // Debugging log
         try {
             const response = await fetch(`${API_BASE_URL}/latest/USD`); // Fetching from USD as a base to get all currency codes
             const data = await response.json();
+            console.log("Currency list API response:", data); // Debugging log
 
             if (data.result === 'success') {
                 const currencies = Object.keys(data.conversion_rates).sort();
+
+                // Clear existing options to prevent duplicates on re-run (e.g., during development)
+                fromCurrencySelect.innerHTML = '';
+                toCurrencySelect.innerHTML = '';
 
                 currencies.forEach(currency => {
                     const option1 = document.createElement('option');
@@ -39,35 +44,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 fromCurrencySelect.value = 'USD';
                 toCurrencySelect.value = 'EUR';
 
-                // Initial fetch for rates
+                console.log("Currencies populated successfully."); // Debugging log
+                // Initial fetch for rates for the default "From" currency
                 fetchRates(fromCurrencySelect.value);
 
             } else {
                 resultParagraph.textContent = `Error fetching currencies: ${data['error-type'] || 'Unknown error'}`;
+                console.error("API error fetching currencies:", data['error-type'] || 'Unknown error in API response'); // Debugging error
             }
         } catch (error) {
-            console.error('Error fetching currency list:', error);
+            console.error('Error fetching currency list (populateCurrencies):', error); // Debugging error
             resultParagraph.textContent = 'Failed to load currency list. Please check your internet connection or API key.';
         }
     }
 
     // Function to fetch exchange rates for a given base currency
     async function fetchRates(baseCurrency) {
+        console.log(`Workspaceing rates for base: ${baseCurrency}...`); // Debugging log
         try {
             const response = await fetch(`${API_BASE_URL}/latest/${baseCurrency}`);
             const data = await response.json();
+            console.log(`Exchange rates API response for ${baseCurrency}:`, data); // Debugging log
 
             if (data.result === 'success') {
                 exchangeRates = data.conversion_rates;
+                console.log('Exchange rates fetched:', exchangeRates); // Debugging log
                 resultParagraph.textContent = ''; // Clear previous errors
-                updateBaseRateDisplay(); // Update the base rate display
+                updateBaseRateDisplay(); // Update the base rate display after rates are fetched
             } else {
                 resultParagraph.textContent = `Error fetching rates: ${data['error-type'] || 'Unknown error'}`;
                 exchangeRates = {}; // Clear rates on error
                 baseRateParagraph.textContent = ''; // Clear base rate display on error
+                console.error(`API error fetching rates for ${baseCurrency}:`, data['error-type'] || 'Unknown error in API response'); // Debugging error
             }
         } catch (error) {
-            console.error('Error fetching exchange rates:', error);
+            console.error('Error fetching exchange rates:', error); // Debugging error
             resultParagraph.textContent = 'Failed to fetch exchange rates. Please try again.';
             exchangeRates = {};
             baseRateParagraph.textContent = ''; // Clear base rate display on error
@@ -78,12 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateBaseRateDisplay() {
         const fromCurrency = fromCurrencySelect.value;
         const toCurrency = toCurrencySelect.value;
+        console.log(`Attempting to update base rate display. From: ${fromCurrency}, To: ${toCurrency}`); // Debugging log
 
-        if (exchangeRates[toCurrency]) {
+        // Ensure exchangeRates is populated and 'toCurrency' exists in it
+        if (Object.keys(exchangeRates).length > 0 && exchangeRates[toCurrency]) {
             const rate = exchangeRates[toCurrency];
             baseRateParagraph.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
+            console.log(`Base rate displayed: 1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`); // Debugging log
         } else {
-            baseRateParagraph.textContent = ''; // Clear if rate is not available
+            baseRateParagraph.textContent = 'Select currencies to see base rate.'; // Or leave empty
+            console.log('Base rate not available yet or selected "To" currency not found in rates.', {exchangeRates, toCurrency}); // Debugging log
         }
     }
 
@@ -120,14 +135,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event Listeners
     fromCurrencySelect.addEventListener('change', (event) => {
+        console.log('From currency changed to:', event.target.value); // Debugging log
         fetchRates(event.target.value); // Fetch new rates when "From" currency changes
         resultParagraph.textContent = ''; // Clear result
     });
 
-    toCurrencySelect.addEventListener('change', updateBaseRateDisplay); // Update base rate when "To" currency changes
+    // Also update base rate when 'to' currency changes (without refetching all rates)
+    toCurrencySelect.addEventListener('change', () => {
+        console.log('To currency changed.'); // Debugging log
+        updateBaseRateDisplay(); // Update base rate when "To" currency changes
+    });
 
     convertBtn.addEventListener('click', convertCurrency);
 
     // Initial setup
     populateCurrencies();
+    console.log('Script initialized.'); // Debugging log
 });
