@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const baseRateParagraph = document.getElementById('baseRate'); // THIS ASSUMES <p id="baseRate"></p> IS IN YOUR HTML
 
     // IMPORTANT: Replace with your actual API key from ExchangeRate-API.com
-    const API_KEY = '9c3d89c169bab95071672045'; // Your key here
+    const API_KEY = '718721cc99d7997915b3b1e0'; // Your key here
     const API_BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
     let exchangeRates = {}; // To store fetched exchange rates
