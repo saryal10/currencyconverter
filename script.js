@@ -4,9 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const toCurrencySelect = document.getElementById('toCurrency');
     const convertBtn = document.getElementById('convertBtn');
     const resultParagraph = document.getElementById('result');
+    const baseRateParagraph = document.createElement('p'); // Create a new paragraph for the base rate
+    baseRateParagraph.id = 'baseRate';
+    document.querySelector('.input-section').appendChild(baseRateParagraph); // Add it to the input section
 
     // Replace with your actual API key from ExchangeRate-API.com
-    const API_KEY = '9c3d89c169bab95071672045';
+    const API_KEY = 'YOUR_API_KEY';
     const API_BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
     let exchangeRates = {}; // To store fetched exchange rates
@@ -57,14 +60,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.result === 'success') {
                 exchangeRates = data.conversion_rates;
                 resultParagraph.textContent = ''; // Clear previous errors
+                updateBaseRateDisplay(); // Update the base rate display
             } else {
                 resultParagraph.textContent = `Error fetching rates: ${data['error-type'] || 'Unknown error'}`;
                 exchangeRates = {}; // Clear rates on error
+                baseRateParagraph.textContent = ''; // Clear base rate display on error
             }
         } catch (error) {
             console.error('Error fetching exchange rates:', error);
             resultParagraph.textContent = 'Failed to fetch exchange rates. Please try again.';
             exchangeRates = {};
+            baseRateParagraph.textContent = ''; // Clear base rate display on error
+        }
+    }
+
+    // Function to update the base rate display
+    function updateBaseRateDisplay() {
+        const fromCurrency = fromCurrencySelect.value;
+        const toCurrency = toCurrencySelect.value;
+
+        if (exchangeRates[toCurrency]) {
+            const rate = exchangeRates[toCurrency];
+            baseRateParagraph.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
+        } else {
+            baseRateParagraph.textContent = ''; // Clear if rate is not available
         }
     }
 
@@ -104,6 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchRates(event.target.value); // Fetch new rates when "From" currency changes
         resultParagraph.textContent = ''; // Clear result
     });
+
+    toCurrencySelect.addEventListener('change', updateBaseRateDisplay); // Update base rate when "To" currency changes
 
     convertBtn.addEventListener('click', convertCurrency);
 
