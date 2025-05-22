@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Set default selections
                 fromCurrencySelect.value = 'USD';
-                toCurrencySelect.value = 'NEP';
+                toCurrencySelect.value = 'NPR';
 
                 console.log("Currencies populated successfully.");
                 // Initial fetch for rates for the default "From" currency
