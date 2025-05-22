@@ -78,6 +78,11 @@ h1 {
     min-width: 150px; /* Ensure minimum width for stacking */
 }
 
+/* Specific styling for the group containing the swap button */
+.currency-swap-group {
+    position: relative; /* For positioning the swap button */
+}
+
 label {
     margin-bottom: 8px; /* More space below labels */
     font-weight: 500; /* Medium font weight */
@@ -116,6 +121,37 @@ select {
 }
 
 
+/* Style for the Swap Currencies Button */
+#swapCurrenciesBtn {
+    position: absolute;
+    top: 50%; /* Center vertically within the group */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Adjust for button's own size */
+    background-color: var(--secondary-color); /* Muted color */
+    color: var(--text-light);
+    border: none;
+    border-radius: 50%; /* Make it round */
+    width: 40px; /* Size of the button */
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    z-index: 1; /* Ensure it's above other elements */
+    display: flex; /* For centering the arrow character */
+    justify-content: center;
+    align-items: center;
+}
+
+#swapCurrenciesBtn:hover {
+    background-color: #5a6268; /* Darker on hover */
+    transform: translate(-50%, -50%) scale(1.05); /* Slightly larger on hover */
+}
+#swapCurrenciesBtn:active {
+    transform: translate(-50%, -50%) scale(0.95); /* Smaller on click */
+}
+
+/* Base Convert Button (if kept) */
 button {
     background-color: var(--primary-color);
     color: var(--text-light);
@@ -162,7 +198,23 @@ button:active {
     font-weight: 500; /* Medium font weight */
     color: var(--secondary-color); /* Muted color for base rate */
     padding: 0 10px;
+    min-height: 1.2em; /* Ensure it occupies space even when empty */
 }
+
+/* Loading Indicator Styles */
+.loading-indicator {
+    font-size: 1em;
+    color: var(--primary-color);
+    margin-top: 15px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.loading-indicator.hidden {
+    opacity: 0;
+    pointer-events: none; /* Make it not clickable when hidden */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
@@ -190,7 +242,19 @@ button:active {
         width: calc(100% - 30px); /* Adjust for padding */
         max-width: none;
     }
+    
+    /* Adjust swap button position for stacked layout */
+    #swapCurrenciesBtn {
+        position: static; /* No longer absolute */
+        transform: none; /* Remove transform */
+        margin: 15px auto; /* Center it with margin */
+        width: 50px; /* Slightly wider button */
+        height: 50px;
+        font-size: 1.5em; /* Larger arrow */
+        display: block; /* Take full width for centering */
+    }
 
+    /* If you kept the convert button */
     button {
         width: 100%; /* Full width button */
         padding: 12px 20px;
