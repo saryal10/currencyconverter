@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const baseRateParagraph = document.getElementById('baseRate');
     const amountInput = document.getElementById('amount');
     const fromCurrencySelect = document.getElementById('fromCurrency');
     const toCurrencySelect = document.getElementById('toCurrency');
