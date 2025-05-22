@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch exchange rates for a given base currency
     async function fetchRates(baseCurrency) {
-        console.log(`Workspaceing rates for base: ${baseCurrency}...`); // Debugging log
+        console.log(`Fetching rates for base: ${baseCurrency}...`); // Debugging log
         try {
             const response = await fetch(`${API_BASE_URL}/latest/${baseCurrency}`);
             const data = await response.json();
